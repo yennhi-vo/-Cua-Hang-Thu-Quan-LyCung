@@ -1,0 +1,53 @@
+﻿<div class="register-container mt-4" style="width: 450px; margin:auto">
+    <div class="card shadow-lg p-4">
+        <h3 class="card-title text-center fw-bold text-success mb-4">Đăng ký tài khoản</h3>
+
+        @if (ViewBag.Error != null)
+        {
+            <p class="text-danger text-center">@ViewBag.Error</p>
+        }
+
+        @using (Html.BeginForm("RegisterSubmit", "User", FormMethod.Post))
+        {
+            <div class="mb-3">
+                <label class="form-label">Họ tên</label>
+                <input type="text" name="HoTen" class="form-control"
+                       value="@ViewBag.HoTen" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Số điện thoại</label>
+                <input type="text" name="SDT" class="form-control"
+                       value="@ViewBag.SDT" required minlength="10" maxlength="10">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" name="Email" class="form-control"
+                       value="@ViewBag.Email" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Mật khẩu</label>
+                <input type="password" name="MatKhau" class="form-control" required minlength="4">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Nhập lại mật khẩu</label>
+                <input type="password" name="ReMatKhau" class="form-control" required minlength="4">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Địa chỉ</label>
+                <input type="text" name="DiaChi" class="form-control"
+                       value="@ViewBag.DiaChi">
+            </div>
+
+            <button type="submit" class="btn btn-success w-100 mb-3">Đăng ký</button>
+
+            <p class="text-center">
+                Đã có tài khoản? <a href="/User/Login" class="fw-bold text-decoration-none">Đăng nhập</a>
+            </p>
+        }
+    </div>
+</div>

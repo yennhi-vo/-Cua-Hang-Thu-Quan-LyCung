@@ -1,0 +1,99 @@
+﻿@model PetShop.DatLich
+
+@{
+    ViewBag.Title = "Đặt lịch chăm sóc thú cưng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card border-0 shadow-lg" style="border-radius: 20px; overflow: hidden;">
+                <div class="card-header bg-success text-white text-center py-4 border-0">
+                    <i class="bi bi-calendar-check fs-1"></i>
+                    <h2 class="fw-bold mb-0 mt-2 text-uppercase" style="letter-spacing: 1px;">Đặt Lịch Hẹn</h2>
+                    <p class="mb-0 opacity-75">Chăm sóc thú cưng của bạn tốt nhất</p>
+                </div>
+
+                <div class="card-body p-4 p-lg-5 bg-white">
+                    @if (TempData["Success"] != null)
+                    {
+                        <div class="alert alert-success border-0 shadow-sm d-flex align-items-center" role="alert" style="border-radius: 12px;">
+                            <i class="bi bi-check-circle-fill me-2 fs-4"></i>
+                            <div>@TempData["Success"]</div>
+                        </div>
+                    }
+
+                    @using (Html.BeginForm("Create", "Booking", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-muted small text-uppercase">Họ tên khách hàng</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0" style="border-radius: 10px 0 0 10px;"><i class="bi bi-person text-success"></i></span>
+                                <input type="text" name="HoTenKhach" class="form-control bg-light border-start-0 custom-input"
+                                       value="@ViewBag.HoTen" required placeholder="Nhập tên của bạn" style="border-radius: 0 10px 10px 0;">
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-muted small text-uppercase">Số điện thoại</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0" style="border-radius: 10px 0 0 10px;"><i class="bi bi-telephone text-success"></i></span>
+                                <input type="text" name="SDTKhach" class="form-control bg-light border-start-0 custom-input"
+                                       value="@ViewBag.SDT" required placeholder="Ví dụ: 0969xxxxxx" style="border-radius: 0 10px 10px 0;">
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-muted small text-uppercase">Ngày & Giờ hẹn</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0" style="border-radius: 10px 0 0 10px;"><i class="bi bi-clock text-success"></i></span>
+                                <input type="datetime-local" name="NgayHen" class="form-control bg-light border-start-0 custom-input"
+                                       required style="border-radius: 0 10px 10px 0;">
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-muted small text-uppercase">Ghi chú yêu cầu</label>
+                            <textarea name="GhiChu" class="form-control bg-light custom-input" rows="3"
+                                      placeholder="Mô tả dịch vụ bạn mong muốn (VD: Tắm, tỉa lông...)" style="border-radius: 10px;"></textarea>
+                        </div>
+
+                        <div class="d-grid mt-5">
+                            <button type="submit" class="btn btn-success btn-lg fw-bold shadow-sm py-3" style="border-radius: 12px; transition: all 0.3s;">
+                                <i class="bi bi-send-fill me-2"></i> GỬI YÊU CẦU ĐẶT LỊCH
+                            </button>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <p class="text-center mt-4 text-muted small">
+                <i class="bi bi-info-circle me-1"></i> Chúng tôi sẽ liên hệ xác nhận trong vòng 15 phút.
+            </p>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Hiệu ứng focus cho các ô nhập liệu */
+    .custom-input:focus {
+        background-color: #fff !important;
+        border-color: #198754 !important;
+        box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.1) !important;
+    }
+
+    /* Hiệu ứng khi di chuột qua nút */
+    .btn-success:hover {
+        background-color: #146c43 !important;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(25, 135, 84, 0.3) !important;
+    }
+
+    /* Điều chỉnh icon input-group */
+    .input-group-text {
+        border: 1px solid #ced4da;
+    }
+</style>

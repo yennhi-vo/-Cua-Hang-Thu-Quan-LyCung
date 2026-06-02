@@ -1,0 +1,156 @@
+﻿@model PetShop.Models.Cart
+
+<div class="container py-5">
+    <h2 class="mb-4 fw-bold text-uppercase"><i class="bi bi-cart3 me-2"></i>Giỏ hàng của bạn</h2>
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th scope="col" class="ps-4 py-3 border-0">Sản phẩm</th>
+                                    <th scope="col" class="text-center py-3 border-0">Giá</th>
+                                    <th scope="col" class="text-center py-3 border-0" style="width: 150px;">Số lượng</th>
+                                    <th scope="col" class="text-end py-3 border-0">Thành tiền</th>
+                                    <th scope="col" class="text-center py-3 border-0"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.cart)
+                                {
+                                    <tr>
+                                        <td class="ps-4">
+                                            <div class="d-flex align-items-center">
+                                                <img src="@Url.Content("~/Content/Images/Products/" + item.Hinh.Trim())"
+                                                     class="rounded shadow-sm me-3"
+                                                     alt="@item.TenSP"
+                                                     style="width:70px; height:70px; object-fit:cover;">
+                                                <div>
+                                                    <h6 class="mb-0 fw-bold">@item.TenSP</h6>
+                                                    <small class="text-muted">Mã: @item.MaSP</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="text-center text-muted">@item.Gia.ToString("N0") đ</td>
+                                        <td class="text-center">
+                                            <div class="input-group input-group-sm justify-content-center">
+                                                <a href="@Url.Action("UpdateSL","Cart", new {id=item.MaSP, loai = item.Loai, type=2})"
+                                                   class="btn btn-outline-secondary rounded-start">-</a>
+                                                <span class="input-group-text bg-white px-3 fw-bold">@item.SoLuong</span>
+                                                <a href="@Url.Action("UpdateSL","Cart", new {id=item.MaSP,loai = item.Loai, type=1})"
+                                                   class="btn btn-outline-secondary rounded-end">+</a>
+                                            </div>
+                                        </td>
+                                        <td class="text-end fw-bold text-primary">@item.ThanhTien.ToString("N0") đ</td>
+                                        <td class="text-center pe-4">
+                                            <a href="@Url.Action("RemoveFromCart","Cart", new {id = item.MaSP, loai = item.Loai,})"
+                                               class="btn btn-sm btn-light text-danger" title="Xóa">
+                                                <i class="bi bi-trash"></i> Xóa
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer bg-white border-0 p-4">
+                    <a href="@Url.Action("Index", "Product")" class="text-decoration-none text-muted">
+                        <i class="bi bi-arrow-left me-2"></i>Tiếp tục mua sắm
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-dark text-white py-3">
+                    <h5 class="mb-0 fw-bold">Tóm tắt đơn hàng</h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between mb-3">
+                        <span class="text-muted">Tạm tính:</span>
+                        <span class="fw-bold">@Model.TongThanhTien().ToString("N0") VNĐ</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3">
+                        <span class="text-muted">Phí vận chuyển:</span>
+                        <span class="fw-bold">35.000 VNĐ</span>
+                    </div>
+
+                    <div class="mt-4 mb-4">
+                        <label class="form-label small fw-bold text-uppercase">Mã khuyến mãi</label>
+                        @using (Html.BeginForm("ApDungMaKM", "Cart", FormMethod.Post, new { @class = "input-group mb-2" }))
+                        {
+                            <input type="text" name="maCode" class="form-control" placeholder="Nhập mã..." />
+                            <button type="submit" class="btn btn-danger">Áp dụng</button>
+                        }
+                        @if (TempData["Error"] != null)
+                        {<div class="text-danger small mt-1">@TempData["Error"]</div>}
+                        @if (TempData["Success"] != null)
+                        {<div class="text-success small mt-1">@TempData["Success"]</div>}
+                    </div>
+
+                    @if (Model.PhanTramGiam > 0)
+                    {
+                        <div class="d-flex justify-content-between mb-3 text-success">
+                            <span>Giảm giá (@Model.PhanTramGiam%):</span>
+                            <span>- @Model.TinhGiamGia().ToString("N0") VNĐ</span>
+                        </div>
+                    }
+
+                    <hr class="my-4">
+
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <span class="h5 mb-0">Tổng cộng:</span>
+                        <span class="h4 mb-0 text-danger fw-bold">@((Model.TongPhaiThanhToan() + 35000).ToString("N0")) VNĐ</span>
+                    </div>
+
+                    <a href="@Url.Action("CheckOut", "Cart")" class="btn btn-success btn-lg w-100 py-3 fw-bold shadow-sm">
+                        TIẾN HÀNH THANH TOÁN
+                    </a>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <p class="small text-muted"><i class="bi bi-shield-check me-1"></i> Thanh toán an toàn & bảo mật</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+
+    .card {
+        border-radius: 12px;
+    }
+
+    .btn {
+        border-radius: 8px;
+        transition: all 0.3s;
+    }
+
+    .table thead th {
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        letter-spacing: 0.5px;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        border: none;
+    }
+
+        .btn-success:hover {
+            background-color: #218838;
+            transform: translateY(-1px);
+        }
+</style>

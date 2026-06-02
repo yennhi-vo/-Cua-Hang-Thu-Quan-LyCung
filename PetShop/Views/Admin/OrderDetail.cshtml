@@ -1,0 +1,147 @@
+﻿@model PetShop.HoaDon
+@{
+    ViewBag.Title = "Chi tiết Đơn hàng #" + Model.MaHD;
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-8">
+        <!-- Order Items -->
+        <div class="admin-table mb-4">
+            <div class="p-3 border-bottom bg-light">
+                <h5 class="mb-0"><i class="fas fa-shopping-bag"></i> Sản phẩm trong đơn hàng</h5>
+            </div>
+            <table class="table mb-0">
+                <thead>
+                    <tr>
+                        <th>Hình</th>
+                        <th>Sản phẩm</th>
+                        <th>Số lượng</th>
+                        <th>Đơn giá</th>
+                        <th>Thành tiền</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.ChiTietHoaDons)
+                    {
+                        <tr>
+                            <td>
+                                @if (!string.IsNullOrEmpty(item.ThuCung.Hinh))
+                                {
+                                    <img src="~/Content/Images/Products/@item.ThuCung.Hinh" alt="@item.ThuCung.TenThuCung" class="img-thumbnail" style="width: 60px; height: 60px; object-fit: cover;">
+                                }
+                                else
+                                {
+                                    <div class="bg-secondary text-white d-flex align-items-center justify-content-center" style="width: 60px; height: 60px; border-radius: 8px;">
+                                        <i class="fas fa-paw"></i>
+                                    </div>
+                                }
+                            </td>
+                            <td class="fw-bold">@item.ThuCung.TenThuCung</td>
+                            <td>@item.SoLuong</td>
+                            <td>@((item.DonGia ?? 0).ToString("N0")) VNĐ</td>
+                            <td class="fw-bold text-success">@(((item.SoLuong ?? 0) * (item.DonGia ?? 0)).ToString("N0")) VNĐ</td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr class="table-light">
+                        <td colspan="4" class="text-end fw-bold">Tổng cộng:</td>
+                        <td class="fw-bold text-success fs-5">@((Model.TongTien ?? 0).ToString("N0")) VNĐ</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <!-- Order Info -->
+        <div class="stats-card mb-3">
+            <h5 class="mb-3"><i class="fas fa-info-circle"></i> Thông tin đơn hàng</h5>
+            <table class="table table-borderless mb-0">
+                <tr>
+                    <td class="fw-bold">Mã đơn hàng:</td>
+                    <td>#@Model.MaHD</td>
+                </tr>
+                <tr>
+                    <td class="fw-bold">Ngày đặt:</td>
+                    <td>@(Model.NgayLap?.ToString("dd/MM/yyyy HH:mm"))</td>
+                </tr>
+                <tr>
+                    <td class="fw-bold">Nhân viên:</td>
+                    <td>@Model.NhanVien.HoTen</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Customer Info -->
+        <div class="stats-card mb-3">
+            <h5 class="mb-3"><i class="fas fa-user"></i> Thông tin khách hàng</h5>
+            <table class="table table-borderless mb-0">
+                <tr>
+                    <td class="fw-bold">Họ tên:</td>
+                    <td>@Model.KhachHang.HoTen</td>
+                </tr>
+                <tr>
+                    <td class="fw-bold">SĐT:</td>
+                    <td>@Model.KhachHang.SDT</td>
+                </tr>
+                <tr>
+                    <td class="fw-bold">Email:</td>
+                    <td>@Model.KhachHang.Email</td>
+                </tr>
+                <tr>
+                    <td class="fw-bold">Địa chỉ:</td>
+                    <td>@Model.KhachHang.DiaChi</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Update Status (commented - requires TrangThai column) -->
+        <!--
+        <div class="stats-card">
+            <h5 class="mb-3"><i class="fas fa-sync"></i> Cập nhật trạng thái</h5>
+            <select id="orderStatus" class="form-select mb-2">
+                <option value="Chờ xác nhận">Chờ xác nhận</option>
+                <option value="Đã xác nhận">Đã xác nhận</option>
+                <option value="Đang giao">Đang giao</option>
+                <option value="Hoàn thành">Hoàn thành</option>
+                <option value="Đã hủy">Đã hủy</option>
+            </select>
+            <button type="button" class="btn btn-admin-primary w-100" onclick="updateStatus()">
+                <i class="fas fa-check"></i> Cập nhật
+            </button>
+        </div>
+        -->
+
+        <a href="@Url.Action("Orders")" class="btn btn-secondary w-100">
+            <i class="fas fa-arrow-left"></i> Quay lại danh sách
+        </a>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        function updateStatus() {
+            var status = $('#orderStatus').val();
+            var orderId = @Model.MaHD;
+
+            $.ajax({
+                url: '@Url.Action("UpdateOrderStatus")',
+                type: 'POST',
+                data: { orderId: orderId, status: status },
+                success: function(response) {
+                    if (response.success) {
+                        alert(response.message);
+                        location.reload();
+                    } else {
+                        alert(response.message);
+                    }
+                },
+                error: function() {
+                    alert('Có lỗi xảy ra!');
+                }
+            });
+        }
+    </script>
+}

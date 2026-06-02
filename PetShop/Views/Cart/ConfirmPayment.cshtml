@@ -1,0 +1,19 @@
+﻿@{
+    ViewBag.Title = "Thanh toán thành công";
+}
+
+<div class="container mt-5 text-center">
+    <div class="card shadow p-5">
+        <div class="mb-4">
+            <i class="bi bi-check-circle-fill text-success" style="font-size: 5rem;"></i>
+        </div>
+        <h2 class="text-success">THANH TOÁN THÀNH CÔNG!</h2>
+        <p class="lead">Cảm ơn bạn đã tin tưởng Shop Bán Thú Cưng.</p>
+        <p>Mã đơn hàng của bạn là: <strong>#@TempData["MaHD"]</strong></p>
+        <p>Chúng tôi sẽ liên hệ với bạn qua số điện thoại để xác nhận đơn hàng sớm nhất.</p>
+        <div class="mt-4">
+            <a href="@Url.Action("Index", "Home")" class="btn btn-primary">Tiếp tục mua sắm</a>
+            <a href="@Url.Action("Profile", "KhachHang")" class="btn btn-outline-secondary">Xem lịch sử đơn hàng</a>
+        </div>
+    </div>
+</div>

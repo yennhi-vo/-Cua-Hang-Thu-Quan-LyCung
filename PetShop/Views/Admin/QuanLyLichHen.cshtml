@@ -1,0 +1,84 @@
+﻿@model IEnumerable<PetShop.DatLich>
+@{
+    ViewBag.Title = "Quản lý lịch hẹn";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@* Phần tiêu đề và nút chức năng *@
+<div class="row mb-4">
+    <div class="col-md-12 text-start">
+        @* Nút chuyển về bên trái và đổi sang màu xanh lá của hệ thống *@
+        <a href="@Url.Action("ThemMoilichHen")" class="btn btn-admin-primary">
+            <i class="fas fa-calendar-plus"></i> Thêm lịch hẹn mới
+        </a>
+    </div>
+</div>
+
+<div class="admin-table shadow-sm">
+    <table class="table align-middle mb-0">
+        @* Header bảng với màu xanh lá đồng bộ *@
+        <thead style="background-color: #8BC97A; color: #000;">
+            <tr>
+                <th class="ps-3">Khách hàng</th>
+                <th>Số điện thoại</th>
+                <th>Thời gian hẹn</th>
+                <th>Tình trạng</th>
+                <th class="text-center" style="width: 150px;">Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="ps-3">
+                            @* Phân biệt khách đã đăng ký và khách vãng lai dựa trên MaKH *@
+                            <span class="fw-bold text-dark">@item.HoTenKhach</span>
+                            @if (item.MaKH == null)
+                            {
+                                <br /><small class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25">Khách vãng lai</small>
+                            }
+                        </td>
+                        <td><span class="text-muted"><i class="fas fa-phone-alt me-1"></i> @item.SDTKhach</span></td>
+                        <td>
+                            <span class="text-dark"><i class="far fa-clock me-1"></i> @String.Format("{0:dd/MM/yyyy HH:mm}", item.NgayHen)</span>
+                        </td>
+                        <td>
+                            @* Logic hiển thị Badge với hiệu ứng trong suốt giúp chữ đen dễ đọc hơn *@
+                            @{
+                                string badgeClass = "bg-warning text-warning border-warning"; // Mặc định Chờ xác nhận
+                                if (item.TinhTrang == "Xác nhận") { badgeClass = "bg-info text-info border-info"; }
+                                else if (item.TinhTrang == "Đã xong") { badgeClass = "bg-success text-success border-success"; }
+                                else if (item.TinhTrang == "Đã hủy") { badgeClass = "bg-danger text-danger border-danger"; }
+                            }
+                            <span class="badge @badgeClass bg-opacity-10 border border-opacity-25 px-3 py-2 text-dark" style="font-weight: 500;">
+                                @item.TinhTrang
+                            </span>
+                        </td>
+                        <td class="text-center">
+                            @* Nút Sửa và Xóa theo phong cách hệ thống *@
+                            <a href="@Url.Action("SuaLichHen", new { id = item.MaDatLich })" class="btn btn-sm btn-admin-warning" title="Sửa/Đổi trạng thái">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <a href="@Url.Action("XoaLichHen", new { id = item.MaDatLich })"
+                               class="btn btn-sm btn-admin-danger"
+                               onclick="return confirm('Bạn có chắc muốn xóa lịch hẹn này?')" title="Xóa">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="5" class="text-center py-5">
+                        <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">Hiện chưa có lịch hẹn nào được đặt.</p>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

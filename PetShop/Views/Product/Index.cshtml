@@ -1,0 +1,91 @@
+﻿@model List<PetShop.ThuCung>
+@{ Layout = "~/Views/Shared/_ProductLayout.cshtml"; 
+                                                    
+}
+            <div class="d-flex justify-content-between align-items-center mb-4 bg-light p-3 rounded shadow-sm">
+                <h4 class="mb-0 fw-bold">Danh sách thú cưng</h4>
+
+                @using (Html.BeginForm("Index", "Product", FormMethod.Get, new { @class = "d-flex align-items-center" }))
+                {
+                    <input type="hidden" name="id" value="@ViewBag.CurrentLoai" />
+
+                    <span class="me-3 fw-bold">Sắp xếp theo giá:</span>
+
+                    <div class="form-check form-check-inline mb-0">
+                        <input class="form-check-input" type="radio" name="sort" value="0" id="sortAsc"
+                               @(ViewBag.CurrentSort == "0" ? "checked" : "") onchange="this.form.submit()" />
+                        <label class="form-check-label" for="sortAsc">Tăng dần</label>
+                    </div>
+
+                    <div class="form-check form-check-inline mb-0">
+                        <input class="form-check-input" type="radio" name="sort" value="1" id="sortDesc"
+                               @(ViewBag.CurrentSort == "1" ? "checked" : "") onchange="this.form.submit()" />
+                        <label class="form-check-label" for="sortDesc">Giảm dần</label>
+                    </div>
+                }
+            </div>
+
+            <h4 class="mb-3">Thú cưng nổi bật</h4>
+            <div class="row">
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var item in Model)
+                    {
+                        <div class="col-md-3 mb-4">
+                            <div class="card h-100 shadow-sm card-hover">
+                                <img src="@Url.Content("~/Content/Images/Products/" + item.Hinh)" class="card-img-top" alt="@item.TenThuCung" height="250" style="object-fit: cover;">
+                                <div class="card-body text-center">
+                                    <h6 class="card-title">@item.TenThuCung</h6>
+
+                                    @*<p class="text-danger fw-bold">@String.Format("{0:N0}", item.Gia) VNĐ</p>*@
+                                    <div class="price-box">
+                                        @if (item.GiaKhuyenMai.HasValue && item.GiaKhuyenMai > 0 && item.GiaKhuyenMai < item.Gia)
+                                        {
+                                            @* 1. Hiển thị giá gốc bị gạch ngang *@
+                                            <span class="original-price" style="text-decoration: line-through; color: #888; margin-right: 8px;">
+                                                @String.Format("{0:N0}", item.Gia)₫
+                                            </span>
+
+                                            @* 2. Hiển thị giá khuyến mãi màu đỏ *@
+                                            <span class="discount-price" style="color: #ff0000; font-weight: bold;">
+                                                @String.Format("{0:N0}", item.GiaKhuyenMai)₫
+                                            </span>
+
+                                            @* 3. Thêm nhãn "Giảm Giá" như trong hình *@
+                                            <div class="mt-1">
+                                                <span style="background-color: #ffebee; color: #ff5252; padding: 2px 6px; font-size: 12px; border-radius: 4px;">
+                                                    Giảm Giá
+                                                </span>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            @* Nếu không có giảm giá, chỉ hiện giá gốc bình thường *@
+                                            <span class="price" style="color: #ff0000; font-weight: bold;">
+                                                @String.Format("{0:N0}", item.Gia)₫
+                                            </span>
+                                        }
+                                    </div>
+                                    <div class="mt-auto d-flex gap-1 justify-content-center">
+                                        <a href="@Url.Action("AddToCart", "Cart", new { id = item.MaThuCung, loai = "ThuCung" })"
+                                           class="btn btn-success btn-sm flex-fill px-1" style="font-size: 0.8rem; white-space: nowrap;">
+                                            <i class="bi bi-cart-plus"></i> Thêm giỏ
+                                        </a>
+                                        <a href="@Url.Action("Detail", "Product", new { id = item.MaThuCung })"
+                                           class="btn btn-outline-success btn-sm flex-fill px-1" style="font-size: 0.8rem; white-space: nowrap;">
+                                            Chi tiết
+                                        </a>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="col-12 text-center">
+                        <p class="text-muted">Không có sản phẩm nào được tìm thấy.</p>
+                    </div>
+                }
+            </div>

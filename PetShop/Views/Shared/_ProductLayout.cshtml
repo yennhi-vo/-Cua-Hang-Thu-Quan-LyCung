@@ -1,0 +1,29 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml"; 
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <aside class="col-md-3 col-lg-2 mb-4">
+            <h5 class="fw-bold">Danh mục thú cưng</h5>
+            @Html.Action("_ThuCung", "Product")
+
+            <h5 class="fw-bold mt-4">Phụ kiện</h5>
+            @Html.Action("_PhuKien", "Product")
+        </aside>
+
+
+        <!-- ========== DANH SÁCH SẢN PHẨM ========== -->
+        <main class="col-md-9 col-lg-10">
+
+            <main class="col-md-9 col-lg-10">
+                <div class="row">
+                    @RenderBody()
+                </div>
+            </main>
+        </main>
+
+       
+
+    </div>
+</div>

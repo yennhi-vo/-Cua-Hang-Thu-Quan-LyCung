@@ -1,0 +1,41 @@
+﻿@model IEnumerable<PetShop.TinTuc>
+
+@{
+    ViewBag.Title = "Tin tức thú cưng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4 text-uppercase fw-bold">Tin tức & Kinh nghiệm</h2>
+    <hr />
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <img src="@Url.Content("~/Content/Images/news/" + (item.HinhTinTuc ?? "no-image.png").Trim())"
+                         class="card-img-top" alt="@item.TieuDe" style="height: 200px; object-fit: cover;">
+
+                    <div class="card-body">
+                        <h5 class="card-title fw-bold text-primary">@item.TieuDe</h5>
+                        <p class="text-muted small">
+                            <i class="bi bi-calendar"></i> @(item.NgayDang.HasValue ? item.NgayDang.Value.ToString("dd/MM/yyyy") : "")
+                            | <i class="bi bi-person"></i> @item.TacGia
+                        </p>
+                        <p class="card-text text-truncate-3">@item.NoiDungNgan</p>
+                    </div>
+
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .text-truncate-3 {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+</style>

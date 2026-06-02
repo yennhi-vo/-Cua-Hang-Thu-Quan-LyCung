@@ -1,0 +1,46 @@
+﻿@model PetShop.PhuKien
+@{
+    ViewBag.Title = "Thêm Phụ Kiện";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="card p-4 shadow-sm" style="max-width: 800px; margin: auto;">
+    <h4><i class="fas fa-bone text-success"></i> Thêm Phụ Kiện Mới</h4>
+    <hr />
+
+    @using (Html.BeginForm("ThemPhuKien", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <div class="row">
+            <div class="col-md-12 mb-3">
+                <label class="form-label fw-bone">Tên phụ kiện</label>
+                @Html.TextBoxFor(m => m.TenPhuKien, new { @class = "form-control", placeholder = "Nhập tên phụ kiện...", required = "required" })
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">Giá bán (VNĐ)</label>
+                @Html.TextBoxFor(m => m.Gia, new { @class = "form-control", type = "number", required = "required" })
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">Giá khuyến mãi (nếu có)</label>
+                @Html.TextBoxFor(m => m.GiaKhuyenMai, new { @class = "form-control", type = "number" })
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Hình ảnh sản phẩm</label>
+            <input type="file" name="uploadImage" class="form-control" accept="image/*" required />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Mô tả chi tiết</label>
+            @Html.TextAreaFor(m => m.MoTa, new { @class = "form-control", rows = "4" })
+        </div>
+
+        <div class="text-end">
+            <a href="@Url.Action("DanhSachPhuKien")" class="btn btn-secondary">Quay lại</a>
+            <button type="submit" class="btn btn-success ">Lưu Phụ Kiện</button>
+        </div>
+    }
+</div>

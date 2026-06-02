@@ -1,0 +1,48 @@
+﻿
+@model PetShop.KhachHang
+@{
+    ViewBag.Title = "Thông tin giao hàng";
+    var cart = (PetShop.Models.Cart)Session["Cart"];
+}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-7">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4>Thông tin giao hàng</h4>
+                </div>
+                <div class="card-body">
+                    @using (Html.BeginForm("ProcessOrder", "Cart", FormMethod.Post))
+                    {
+                        <div class="mb-3">
+                            <label>Họ tên người nhận</label>
+                            <input type="text" class="form-control" value="@Model.HoTen" readonly />
+                        </div>
+                        <div class="mb-3">
+                            <label>Số điện thoại</label>
+                            <input type="text" name="SDT" class="form-control" value="@Model.SDT" required />
+                        </div>
+                        <div class="mb-3">
+                            <label>Địa chỉ nhận hàng</label>
+                            <textarea name="DiaChiGiaoHang" class="form-control" rows="3" required>@Model.DiaChi</textarea>
+                        </div>
+                        <input type="hidden" name="ship" value="30000" />
+                        <button type="submit" class="btn btn-danger btn-lg w-100">XÁC NHẬN THANH TOÁN</button>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="card shadow">
+                <div class="card-header"><h5>Tóm tắt đơn hàng</h5></div>
+                <div class="card-body">
+                    <p>Tổng tiền hàng: <strong>@cart.TongThanhTien().ToString("N0") VNĐ</strong></p>
+                    <p>Phí vận chuyển: <strong>30,000 VNĐ</strong></p>
+                    <hr />
+                    <h4 class="text-danger">Tổng: @((cart.TongThanhTien() + 30000).ToString("N0")) VNĐ</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

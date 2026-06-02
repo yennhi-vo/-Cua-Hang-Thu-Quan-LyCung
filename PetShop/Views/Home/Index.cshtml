@@ -1,0 +1,224 @@
+﻿@model PetShop.Models.HomeViewModel
+<!-- Section dau -->
+<div class="container-fluid px-0">
+    <div class="row g-0">
+
+        <div id="carouselExampleSlidesOnly" class="carousel" data-bs-ride="carousel" data-bs-interval="2000">
+            <div class="carousel-inner h-100">
+                @foreach (var item in Model.Bannerchinhes)
+                {
+                    <div class="carousel-item active h-75">
+                        <img src="@Url.Content("~/Content/Images/bannerchinh/"+ item.BANNERChinh1)" style=" width:550px; height:550px" ; class="d-block w-100 custom-carousel-img">
+                    </div>
+                }
+
+            </div>
+        </div>
+
+    </div>
+
+    <br />
+    <hr class="section-divider">
+    <div class="row g-0">
+        <!-- Slideshow -->
+        <div class="col-md-6 left-carousel">
+            <div id="carouselExampleSlidesOnly" class="carousel slide h-100" data-bs-ride="carousel" data-bs-interval="2000">
+                <div class="carousel-inner h-100">
+                    @foreach (var item in Model.Banners)
+                    {
+                        <div class="carousel-item active h-75">
+                            <img src="@Url.Content("~/Content/Images/banner/"+ item.HinhBANNER)" style=" width:400px; height:400px" ; class="d-block w-100 custom-carousel-img">
+                        </div>
+                    }
+
+                </div>
+            </div>
+        </div>
+        <!-- Giới thiệu và nút đăng ký -->
+        <div class="col-md-6 bg-white right-content">
+            <div>
+                <h1 class="fw-bold display-5">
+                    <span class="text-success">PetShop</span> – nơi mang đến niềm vui và người bạn thân thiết cho bạn!
+                </h1>
+                <p class="mt-3 fs-5 text-muted">
+                    Chào mừng bạn đến với <strong>PetShop</strong>, cửa hàng chuyên cung cấp các giống thú cưng đáng yêu và chất lượng.
+                    Chúng tôi cam kết mang đến cho bạn những người bạn nhỏ khỏe mạnh, đáng tin cậy cùng với các sản phẩm chăm sóc, phụ kiện và dịch vụ tận tâm.
+                </p>
+                <p class="mt-3 fs-5 text-muted">
+                    Hãy đăng ký ngay hôm nay để nhận thông tin thú cưng mới nhất, ưu đãi đặc biệt và các mẹo chăm sóc hữu ích!
+                </p>
+                <form id="signupForm" class="d-flex mt-4" style="max-width: 600px;">
+                    <a href="@Url.Action("Register","User")" class="btn btn-success" style="white-space: nowrap; height: 38px;">Đăng ký</a>
+                </form>
+                <div id="confirmationMsg" class="mt-3 text-success fw-bold" style="display: none;"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <br />
+    <hr class="section-divider">
+
+    <!-- Section 3: Mua bán thú cưng -->
+    <section class="gray-section py-5 animate-on-scroll">
+        <div class="container">
+            <div class="row text-center mb-4">
+                <h2><strong>Mua Bán Thú Cưng Đáng Yêu & Chất Lượng</strong></h2>
+                <p>
+                    Chào mừng bạn đến với PetShop – nơi quy tụ những người bạn nhỏ đáng yêu nhất!
+                    Chúng tôi mang đến các giống thú cưng được chăm sóc kỹ lưỡng, khỏe mạnh, thân thiện và đã được tiêm phòng đầy đủ.
+                    Cùng khám phá ngay để tìm kiếm người bạn đồng hành hoàn hảo cho gia đình bạn!
+                </p>
+            </div>
+
+            <div class="container">
+                <div class="row g-4">
+                    @foreach (var item in Model.LoaiThuCungs)
+                    {
+                        <div class="col-md-4">
+                            <div class="card h-100 shadow-sm card-hover">
+                                <img src="@Url.Content("~/Content/Images/"+ item.Hinh)" style=" width:400px; height:250px" ; class="card-img-top" alt="@item.TenLoai">
+                                <div class="card-body">
+                                    <h5 class="card-title">@item.TenLoai</h5>
+                                    <p class="card-text">
+                                        @item.MoTa
+                                    </p>
+                                    <a href="@Url.Action("Index","Product")" class="btn btn-outline-success">Xem thêm</a>
+                                </div>
+                            </div>
+                        </div>
+
+                    }
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Section 4: Sức khỏe thú cưng -->
+    <section class="gray-section py-5 animate-on-scroll">
+        <div class="container">
+            <div class="row mb-5 align-items-center">
+                <div class="col-md-6">
+                    <h2><strong>Đảm Bảo <em>Sức Khỏe & Hạnh Phúc</em> Tối Ưu Cho Thú Cưng</strong></h2>
+                </div>
+                <div class="col-md-6">
+                    <p>
+                        Tại <b>PetShop</b>, chúng tôi thấu hiểu rằng sức khỏe của thú cưng chính là niềm hạnh phúc của bạn.
+                        Vì vậy, chúng tôi cung cấp những bài viết, hướng dẫn và mẹo hữu ích giúp bạn chăm sóc, phòng bệnh và theo dõi sức khỏe thú cưng một cách khoa học.
+                    </p>
+                </div>
+            </div>
+
+            <div class="container">
+                <div class="row g-4">
+
+                    @foreach (var item in Model.ChamSocSucKhoes)
+                    {<!-- Card 1 -->
+                        <div class="col-md-4">
+                            <div class="card h-100 shadow-sm card-hover">
+                                <img src="@Url.Content("~/Content/Images/"+ item.Hinh)" style=" width:400px; height:250px" ; class="card-img-top" alt="@item.TenLoai">
+                                <div class="card-body">
+                                    <h5 class="card-title">@item.TenLoai</h5>
+                                    <p class="card-text">
+                                        @item.MoTa
+                                    </p>
+                                    <a href="@Url.Action("DichVu","Product")" class="btn btn-outline-success">Xem thêm</a>
+                                </div>
+                            </div>
+                        </div>
+
+                    }
+
+
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Section 5: Dịch vụ thú cưng -->
+    <section class="gray-section py-5 animate-on-scroll">
+        <div class="container">
+            <div class="row mb-4">
+                <div class="col-md-7">
+                    <h2 class="fw-bold">Dịch Vụ <em>Chuyên Nghiệp</em> Cho Thú Cưng Của Bạn</h2>
+                </div>
+                <div class="col-md-5">
+                    <p>
+                        Tận hưởng các dịch vụ hàng đầu tại PetShop – nơi thú cưng được chăm sóc, thư giãn và yêu thương hết mình.
+                        Từ spa, khách sạn thú cưng đến dịch vụ chăm sóc sức khỏe toàn diện.
+                    </p>
+                </div>
+            </div>
+
+            <div class="row g-4">
+
+
+                @foreach (var item in Model.LoaiDichVus)
+                {<!-- Card 1 -->
+                    <!-- Card 1: Spa -->
+                    <div class="col-md-4">
+                        <div class="card h-100 shadow-sm card-hover">
+                            <img src="@Url.Content("~/Content/Images/"+ item.Hinh)" style=" width:408px; height:250px" ; class="card-img-top" alt="@item.TenLoai">
+                            <div class="card-body">
+                                <h5 class="card-title fw-bold">@item.TenLoai</h5>
+                                <p class="card-text">
+                                    @item.MoTa
+                                </p>
+                                <a href="@Url.Action("DichVu","Product")" class="btn btn-outline-success">Xem thêm</a>
+                            </div>
+                        </div>
+                    </div>
+
+                }
+
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 6: Sản phẩm nổi bật -->
+    <section class="gray-section py-5 animate-on-scroll">
+        <div class="container">
+            <div class="row mb-4">
+                <div class="col-md-7">
+                    <h2 class="fw-bold">Khám Phá <em>Sản Phẩm Chăm Sóc Thú Cưng</em> Được Yêu Thích Nhất</h2>
+                </div>
+                <div class="col-md-5">
+                    <p>
+                        Cùng PetShop tìm hiểu những sản phẩm chất lượng cao giúp thú cưng của bạn luôn khỏe mạnh, vui vẻ và được chăm sóc toàn diện – từ thức ăn, đồ chơi đến phụ kiện tiện lợi.
+                    </p>
+                </div>
+            </div>
+
+            <div class="row g-4">
+
+
+                @foreach (var item in Model.LoaiPhuKiens)
+                {<!-- Card 1 -->
+                    <!-- Card 1: Spa -->
+                    <div class="col-md">
+                        <div class="card h-100 shadow-sm card-hover">
+                            <img src="@Url.Content("~/Content/Images/"+ item.Hinh)" style=" height:250px" ; class="card-img-top" alt="@item.TenLoai">
+                            <div class="card-body">
+                                <h5 class="card-title fw-bold">@item.TenLoai</h5>
+                                <p class="card-text">
+                                    @item.MoTa
+                                </p>
+                                <a href="@Url.Action("PhuKien","Product")" class="btn btn-outline-success">Xem thêm</a>
+                            </div>
+                        </div>
+                    </div>
+
+                }
+
+
+            </div>
+        </div>
+    </section>
+
+</div>
+
+    <script src="Script.js"></script>
+
+

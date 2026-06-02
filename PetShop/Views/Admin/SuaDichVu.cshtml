@@ -1,0 +1,47 @@
+﻿@model PetShop.DichVu
+@{
+    ViewBag.Title = "Sửa Dịch Vụ";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="card p-4 shadow-sm" style="max-width: 800px; margin: auto;">
+    <h4><i class="fas fa-tools text-success"></i> Chỉnh sửa dịch vụ: @Model.TenDichVu</h4>
+    <hr />
+
+    @using (Html.BeginForm("SuaDichVu", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.HiddenFor(m => m.MaDichVu)
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Tên dịch vụ</label>
+            @Html.TextBoxFor(m => m.TenDichVu, new { @class = "form-control" })
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Giá dịch vụ (VNĐ)</label>
+            @Html.TextBoxFor(m => m.Gia, new { @class = "form-control", type = "number" })
+
+        </div>
+        <div class="col-md-6">
+            <label class="form-label fw-bold">Giá khuyến mãi</label>
+            @Html.TextBoxFor(m => m.GiaKhuyenMai, new { @class = "form-control", type = "number" })
+        </div>
+        <div class="mb-3">
+            <label class="form-label fw-bold">Ảnh minh họa</label>
+            <div class="mb-2">
+                <img src="@Url.Content("~/Content/Images/dichvu/" + Model.Hinh)" width="150" class="img-thumbnail" />
+            </div>
+            <input type="file" name="uploadImage" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Mô tả dịch vụ</label>
+            @Html.TextAreaFor(m => m.MoTa, new { @class = "form-control", rows = "4" })
+        </div>
+
+        <div class="text-end">
+            <a href="@Url.Action("DanhSachDichVu")" class="btn btn-secondary">Quay lại</a>
+            <button type="submit" class="btn btn-success">Lưu thay đổi</button>
+        </div>
+    }
+</div>

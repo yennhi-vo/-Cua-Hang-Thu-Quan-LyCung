@@ -1,0 +1,79 @@
+﻿@model IEnumerable<PetShop.HoaDon>
+@{
+    ViewBag.Title = "Quản lý Đơn hàng";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="row mb-4">
+    <div class="col-md-8">
+       
+    </div>
+    <div class="col-md-4 text-end">
+        <div class="stats-card p-2">
+            <strong>Tổng: @Model.Count() đơn hàng</strong>
+        </div>
+    </div>
+</div>
+
+<div class="admin-table">
+    <table class="table mb-0">
+        <thead>
+            <tr>
+                <th>Mã ĐH</th>
+                <th>Ngày đặt</th>
+                <th>Khách hàng (Đã sửa)</th>
+                <th>SĐT</th>
+                <th>Nhân viên</th>
+                <th>Tổng tiền</th>
+                <th style="width: 200px;">Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Any())
+            {
+                foreach (var order in Model)
+                {
+                    <tr>
+                        <td><strong>#@order.MaHD</strong></td>
+                        <td>@(order.NgayLap?.ToString("dd/MM/yyyy HH:mm") ?? "N/A")</td>
+                        <td>@(order.KhachHang != null ? order.KhachHang.HoTen : "Không có tên")</td>
+                        <td>@(order.KhachHang != null ? order.KhachHang.SDT : "N/A")</td>
+                        <td>@(order.NhanVien != null ? order.NhanVien.HoTen : "N/A")</td>
+                        <td class="fw-bold text-success">@((order.TongTien ?? 0).ToString("N0")) VNĐ</td>
+
+                        @* Cột Thao tác 1: Dropdown thay đổi trạng thái *@
+                        <td style="width: 180px;">
+                            @using (Html.BeginForm("CapNhatTrangThai", "Admin", FormMethod.Post))
+                            {
+                                <input type="hidden" name="maHD" value="@order.MaHD" />
+                                <select name="maTinhTrang" class="form-select form-select-sm" onchange="this.form.submit()">
+                                    <option value="1" @(order.TinhTrang == 1 ? "selected" : "")>Chờ xác nhận</option>
+                                    <option value="2" @(order.TinhTrang == 2 ? "selected" : "")>Đã xác nhận</option>
+                                    <option value="3" @(order.TinhTrang == 3 ? "selected" : "")>Đang giao hàng</option>
+                                    <option value="4" @(order.TinhTrang == 4 ? "selected" : "")>Hoàn thành</option>
+                                    <option value="5" @(order.TinhTrang == 5 ? "selected" : "")>Đã hủy</option>
+                                </select>
+                            }
+                        </td>
+
+                        @* Cột Thao tác 2: Nút xem chi tiết *@
+                        <td>
+                            <a href="@Url.Action("OrderDetail", new { id = order.MaHD })" class="btn btn-sm btn-admin-primary">
+                                <i class="fas fa-eye"></i> Chi tiết
+                            </a>
+                        </td>
+                    </tr>
+                }
+            }
+    
+        </tbody>
+    </table>
+</div>
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle me-2"></i> @TempData["Message"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}

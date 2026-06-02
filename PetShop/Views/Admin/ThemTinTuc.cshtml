@@ -1,0 +1,52 @@
+﻿@model PetShop.TinTuc
+@{
+    ViewBag.Title = "Viết bài mới";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="card p-4">
+    <h4>Viết bài tin tức mới</h4>
+    <hr />
+
+    @using (Html.BeginForm("ThemTinTuc", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <div class="mb-3">
+            <label class="form-label">Tiêu đề bài viết</label>
+            @Html.TextBoxFor(m => m.TieuDe, new { @class = "form-control", required = "required" })
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Tác giả</label>
+                @Html.TextBoxFor(m => m.TacGia, new { @class = "form-control" })
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Ảnh đại diện bài viết</label>
+                <input type="file" name="uploadImage" class="form-control" accept="image/*" />
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Mô tả ngắn</label>
+            @Html.TextAreaFor(m => m.NoiDungNgan, new { @class = "form-control", rows = "2" })
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Nội dung chi tiết</label>
+            @Html.TextAreaFor(m => m.NoiDungChiTiet, new { @id = "NoiDungEditor" })
+        </div>
+
+        <div class="text-end">
+            <a href="@Url.Action("DanhSachTinTuc")" class="btn btn-secondary">Quay lại</a>
+            <button type="submit" class="btn btn-primary">Lưu và đăng bài</button>
+        </div>
+    }
+</div>
+
+@section scripts {
+    @* Nhúng CKEditor để soạn thảo bài viết chuyên nghiệp *@
+    <script src="https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script>
+    <script>
+        CKEDITOR.replace('NoiDungEditor');
+    </script>
+}

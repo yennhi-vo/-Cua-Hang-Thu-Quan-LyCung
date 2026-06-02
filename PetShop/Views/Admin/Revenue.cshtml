@@ -1,0 +1,224 @@
+﻿@model PetShop.ViewModels.RevenueReportViewModel
+@{
+    ViewBag.Title = "Báo cáo Doanh thu";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="stats-card">
+            <form method="get" class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label">Từ ngày:</label>
+                    <input type="date" name="startDate" class="form-control" value="@Model.StartDate.ToString("yyyy-MM-dd")">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Đến ngày:</label>
+                    <input type="date" name="endDate" class="form-control" value="@Model.EndDate.ToString("yyyy-MM-dd")">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">&nbsp;</label>
+                    <button type="submit" class="btn btn-admin-primary w-100">
+                        <i class="fas fa-search"></i> Xem báo cáo
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <!-- Summary Stats -->
+    <div class="col-md-4 mb-3">
+        <div class="stats-card">
+            <div class="icon" style="background: linear-gradient(135deg, #51cf66 0%, #37b24d 100%); color: white;">
+                <i class="fas fa-dollar-sign"></i>
+            </div>
+            <h3>@Model.TotalRevenue.ToString("N0") VNĐ</h3>
+            <p>Tổng doanh thu</p>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-3">
+        <div class="stats-card">
+            <div class="icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                <i class="fas fa-receipt"></i>
+            </div>
+            <h3>@Model.TotalOrders</h3>
+            <p>Số đơn hàng</p>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-3">
+        <div class="stats-card">
+            <div class="icon" style="background: linear-gradient(135deg, #ffd43b 0%, #fab005 100%); color: white;">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <h3>@Model.AverageOrderValue.ToString("N0") VNĐ</h3>
+            <p>Giá trị TB/Đơn</p>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <!-- Daily Revenue Chart -->
+    <div class="col-md-8 mb-3">
+        <div class="stats-card">
+            <h5 class="mb-3"><i class="fas fa-chart-area"></i> Doanh thu theo ngày</h5>
+            <canvas id="dailyRevenueChart" height="100"></canvas>
+        </div>
+    </div>
+
+    <!-- Category Revenue Chart -->
+    <div class="col-md-4 mb-3">
+        <div class="stats-card">
+            <h5 class="mb-3"><i class="fas fa-chart-pie"></i> Doanh thu theo loại</h5>
+            <canvas id="categoryChart" height="200"></canvas>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <!-- Top Products -->
+    <div class="col-md-6 mb-3">
+        <div class="admin-table">
+            <div class="p-3 border-bottom bg-light">
+                <h5 class="mb-0"><i class="fas fa-trophy"></i> Top 10 Sản phẩm bán chạy</h5>
+            </div>
+            <table class="table mb-0">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Sản phẩm</th>
+                        <th>Số lượng</th>
+                        <th>Doanh thu</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{ int rank = 1; }
+                    @foreach (var product in Model.TopProducts)
+                    {
+                        <tr>
+                            <td>
+                                @if (rank <= 3)
+                                {
+                                    <span class="badge bg-warning text-dark">@rank</span>
+                                }
+                                else
+                                {
+                                    <span>@rank</span>
+                                }
+                            </td>
+                            <td class="fw-bold">@product.TenThuCung</td>
+                            <td>@product.SoLuongBan</td>
+                            <td class="text-success fw-bold">@product.DoanhThu.ToString("N0") VNĐ</td>
+                        </tr>
+                        rank++;
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Revenue by Category -->
+    <div class="col-md-6 mb-3">
+        <div class="admin-table">
+            <div class="p-3 border-bottom bg-light">
+                <h5 class="mb-0"><i class="fas fa-layer-group"></i> Doanh thu theo loại sản phẩm</h5>
+            </div>
+            <table class="table mb-0">
+                <thead>
+                    <tr>
+                        <th>Loại</th>
+                        <th>Số lượng bán</th>
+                        <th>Doanh thu</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var category in Model.RevenueByCategory)
+                    {
+                        <tr>
+                            <td class="fw-bold">@category.TenLoai</td>
+                            <td>@category.SoLuong</td>
+                            <td class="text-success fw-bold">@category.DoanhThu.ToString("N0") VNĐ</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        // Daily Revenue Chart
+        var ctxDaily = document.getElementById('dailyRevenueChart').getContext('2d');
+        var dailyChart = new Chart(ctxDaily, {
+            type: 'line',
+            data: {
+                labels: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.DailyRevenue.Select(d => d.Ngay.ToString("dd/MM")))),
+                datasets: [{
+                    label: 'Doanh thu (VNĐ)',
+                    data: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.DailyRevenue.Select(d => d.DoanhThu))),
+                    backgroundColor: 'rgba(139, 201, 122, 0.2)',
+                    borderColor: 'rgba(111, 176, 94, 1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return value.toLocaleString('vi-VN') + ' VNĐ';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Category Pie Chart
+        var ctxCategory = document.getElementById('categoryChart').getContext('2d');
+        var categoryChart = new Chart(ctxCategory, {
+            type: 'doughnut',
+            data: {
+                labels: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.RevenueByCategory.Select(c => c.TenLoai))),
+                datasets: [{
+                    data: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.RevenueByCategory.Select(c => c.DoanhThu))),
+                    backgroundColor: [
+                        '#667eea',
+                        '#51cf66',
+                        '#ff6b6b',
+                        '#ffd43b',
+                        '#748ffc',
+                        '#20c997',
+                        '#fd7e14',
+                        '#e83e8c'
+                    ],
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    </script>
+}

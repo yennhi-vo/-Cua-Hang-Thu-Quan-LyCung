@@ -1,0 +1,157 @@
+﻿@model PetShop.ViewModels.DashboardViewModel
+@{
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="row mb-4">
+    <!-- Stats Cards -->
+    <div class="col-md-3 mb-3">
+        <div class="stats-card">
+            <div class="icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                <i class="fas fa-paw"></i>
+            </div>
+            <h3>@Model.TotalProducts</h3>
+            <p>Tổng Sản phẩm</p>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="stats-card">
+            <div class="icon" style="background: linear-gradient(135deg, #51cf66 0%, #37b24d 100%); color: white;">
+                <i class="fas fa-receipt"></i>
+            </div>
+            <h3>@Model.TotalOrders</h3>
+            <p>Tổng Đơn hàng</p>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="stats-card">
+            <div class="icon" style="background: linear-gradient(135deg, #ff6b6b 0%, #ee5555 100%); color: white;">
+                <i class="fas fa-users"></i>
+            </div>
+            <h3>@Model.TotalCustomers</h3>
+            <p>Khách hàng</p>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="stats-card">
+            <div class="icon" style="background: linear-gradient(135deg, #ffd43b 0%, #fab005 100%); color: white;">
+                <i class="fas fa-dollar-sign"></i>
+            </div>
+            <h3>@Model.MonthlyRevenue.ToString("N0") VNĐ</h3>
+            <p>Doanh thu tháng này</p>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <!-- Monthly Revenue Chart -->
+    <div class="col-md-8 mb-3">
+        <div class="stats-card">
+            <h5 class="mb-3"><i class="fas fa-chart-bar"></i> Doanh thu 6 tháng gần đây</h5>
+            <canvas id="revenueChart" height="80"></canvas>
+        </div>
+    </div>
+
+    <!-- Top Products -->
+    <div class="col-md-4 mb-3">
+        <div class="stats-card">
+            <h5 class="mb-3"><i class="fas fa-star"></i> Sản phẩm bán chạy</h5>
+            <ul class="list-unstyled">
+                @foreach (var product in Model.TopProducts)
+                {
+                    <li class="mb-2 pb-2 border-bottom">
+                        <div class="d-flex justify-content-between">
+                            <span class="fw-bold">@product.TenThuCung</span>
+                            <span class="badge bg-success">@product.SoLuongBan bán</span>
+                        </div>
+                        <small class="text-muted">@product.DoanhThu.ToString("N0") VNĐ</small>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Recent Orders -->
+    <div class="col-12">
+        <div class="admin-table">
+            <div class="p-3 border-bottom">
+                <h5 class="mb-0"><i class="fas fa-clock"></i> Đơn hàng gần đây</h5>
+            </div>
+            <table class="table mb-0">
+                <thead>
+                    <tr>
+                        <th>Mã ĐH</th>
+                        <th>Ngày</th>
+                        <th>Khách hàng</th>
+                        <th>Tổng tiền</th>
+                        <th>Trạng thái</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var order in Model.RecentOrders)
+                    {
+                        <tr>
+                            <td><strong>#@order.MaHD</strong></td>
+                            <td>@order.NgayLap.ToString("dd/MM/yyyy")</td>
+                            <td>@order.KhachHang</td>
+                            <td class="fw-bold">@order.TongTien.ToString("N0") VNĐ</td>
+                            <td><span class="badge bg-success">@order.TrangThai</span></td>
+                            <td>
+                                <a href="@Url.Action("OrderDetail", "Admin", new { id = order.MaHD })" class="btn btn-sm btn-admin-primary">
+                                    <i class="fas fa-eye"></i> Chi tiết
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        // Revenue Chart
+        var ctx = document.getElementById('revenueChart').getContext('2d');
+        var revenueChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.MonthlyRevenueChart.Select(m => m.Month))),
+                datasets: [{
+                    label: 'Doanh thu (VNĐ)',
+                    data: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.MonthlyRevenueChart.Select(m => m.Revenue))),
+                    backgroundColor: 'rgba(139, 201, 122, 0.8)',
+                    borderColor: 'rgba(111, 176, 94, 1)',
+                    borderWidth: 2,
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return value.toLocaleString('vi-VN') + ' VNĐ';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+}

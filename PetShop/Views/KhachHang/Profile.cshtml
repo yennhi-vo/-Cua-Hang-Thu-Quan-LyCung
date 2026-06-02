@@ -1,0 +1,154 @@
+﻿@model PetShop.KhachHang
+@{
+    ViewBag.Title = "Hồ sơ cá nhân";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    // Ép kiểu dữ liệu từ ViewBag để sử dụng vòng lặp
+    var dsLichHen = ViewBag.LichHen as List<PetShop.DatLich>;
+    var dsHoaDon = ViewBag.HoaDon as List<PetShop.HoaDon>;
+}
+
+<div class="container mt-5 mb-5">
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <img src="https://ui-avatars.com/api/?name=@Model.HoTen&background=random&size=128"
+                             class="rounded-circle shadow" alt="Avatar">
+                    </div>
+                    <h4 class="font-weight-bold">@Model.HoTen</h4>
+                    <p class="text-muted small">Khách hàng của PetShop</p>
+                    <hr>
+                    <div class="text-left">
+                        <p><strong><i class="fas fa-envelope mr-2 text-primary"></i> Email:</strong> @Model.Email</p>
+                        <p><strong><i class="fas fa-phone mr-2 text-success"></i> SĐT:</strong> @Model.SDT</p>
+                        <p><strong><i class="fas fa-map-marker-alt mr-2 text-danger"></i> Địa chỉ:</strong> @Model.DiaChi</p>
+                    </div>
+                    <a href="@Url.Action("ChinhSuaHoSo", "KhachHang",new { id = Model.MaKH })" class="btn btn-primary btn-block btn-sm mt-3">Chỉnh sửa hồ sơ</a>
+                    <a href="@Url.Action("Logout", "User")" class="btn btn-outline-danger btn-block btn-sm mt-2">Đăng xuất</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white p-0">
+                    <ul class="nav nav-tabs nav-justified border-0" id="profileTabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="order-tab" data-toggle="tab" href="#orders" role="tab" aria-controls="orders" aria-selected="true">
+                                <i class="fas fa-shopping-basket"></i> Đơn hàng (@(dsHoaDon?.Count ?? 0))
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="booking-tab" data-toggle="tab" href="#bookings" role="tab" aria-controls="bookings" aria-selected="false">
+                                <i class="fas fa-calendar-check"></i> Lịch hẹn (@(dsLichHen?.Count ?? 0))
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-body">
+                    <div class="tab-content" id="profileTabsContent">
+
+                        <div class="tab-pane fade show active" id="orders" role="tabpanel">
+                            <h5 class="mb-4 font-weight-bold text-primary">Lịch sử đơn hàng</h5>
+                            @if (dsHoaDon != null && dsHoaDon.Any())
+                            {
+                                <div class="table-responsive">
+                                    <table class="table table-hover border">
+                                        <thead class="bg-light">
+                                            <tr>
+                                                <th>Mã đơn</th>
+                                                <th>Ngày lập</th>
+                                                <th>Tổng tiền</th>
+                                                <th>Trạng thái</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var hd in dsHoaDon)
+                                            {
+                                                <tr>
+                                                    <td><strong>Mã hóa đơn:@hd.MaHD</strong></td>
+                                                    <td>@(hd.NgayLap.HasValue ? hd.NgayLap.Value.ToString("dd/MM/yyyy") : "N/A")</td>
+                                                    <td class="text-danger font-weight-bold">@string.Format("{0:0,0}", hd.TongTien) đ</td>
+                                                    <td>
+                                                        <span class="badge @(hd.TinhTrang == 4 ? "badge-success" : "badge-warning")"style="color:black">
+                                                            @(hd.TinhTrang == 4 ? "Hoàn thành" : "Đang xử lý")
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="text-center py-4">
+                                    <p class="text-muted">Bạn chưa có đơn hàng nào.</p>
+                                    <a href="/" class="btn btn-outline-primary btn-sm">Mua sắm ngay</a>
+                                </div>
+                            }
+                        </div>
+
+                        <div class="tab-pane fade" id="bookings" role="tabpanel">
+                            <h5 class="mb-4 font-weight-bold text-success">Lịch đặt dịch vụ</h5>
+                            @if (dsLichHen != null && dsLichHen.Any())
+                            {
+                                <div class="row">
+                                    @foreach (var lh in dsLichHen)
+                                    {
+                                        <div class="col-md-6 mb-3">
+                                            <div class="card border">
+                                                <div class="card-body p-3">
+                                                    <h6 class="font-weight-bold text-dark">Mã lịch hẹn:@lh.MaDatLich</h6>
+                                                    <p class="mb-1 small text-muted"><i class="far fa-calendar-alt"></i> Ngày: @(lh.NgayHen.HasValue ? lh.NgayHen.Value.ToString("dd/MM/yyyy") : "N/A")</p>
+ 
+                                                    <div class="mt-2">
+                                                        <span class="badge badge-pill border text-secondary px-3" style="color: black">@lh.TinhTrang</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="text-center py-4">
+                                    <p class="text-muted">Bạn chưa có lịch hẹn dịch vụ nào.</p>
+                                    <a href="/DichVu" class="btn btn-outline-success btn-sm">Đặt lịch ngay</a>
+                                </div>
+                            }
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .nav-tabs .nav-link {
+        border-radius: 0;
+        color: #666;
+        font-weight: 500;
+        padding: 15px;
+    }
+
+        .nav-tabs .nav-link.active {
+            color: #007bff;
+            border-bottom: 3px solid #007bff;
+            background-color: #f8f9fa !important;
+        }
+
+    .card {
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .badge {
+        padding: 8px 12px;
+    }
+</style>

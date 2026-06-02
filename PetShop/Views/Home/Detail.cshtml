@@ -1,0 +1,68 @@
+﻿@model tblSach
+<div class="row">
+    <!-- Ảnh sản phẩm -->
+    <div class="col-md-4">
+        <div class="product-gallery">
+            <div class="main-image-container">
+                <img id="mainImage" src="@Url.Content("~/Content/Images/"+ Model.AnhBia)" alt="Ảnh Sản phẩm Chính" style="max-width: 400px; border: 1px solid #ccc;">
+            </div>
+            <div class="thumbnails mt-3">
+                @foreach (var item in Model.tblHinhAnh)
+                {
+                    <img class="img-thumbnail" src="@Url.Content("~/Content/Images/"+ item.HinhAnh)" data-full-src="@Url.Content("~/Content/Images/"+ item.HinhAnh)" alt="Ảnh 1" style="width: 80px; cursor: pointer;">
+                }
+            </div>
+        </div>
+    </div>
+    <!-- Thông tin sản phẩm -->
+    <div class="col-md-8">
+        <h3>@Model.TenSach</h3>
+        <h4>@Model.GiaBan VNĐ</h4>
+        <p>
+            @Model.NoiDung
+        </p>
+        <div class="mb-3">
+            <a href="@Url.Action("AddToCart","Cart", new {id=Model.MaSach})" class="btn btn-success">Thêm vào giỏ</a>
+            <a href="index.html" class="btn btn-outline-secondary">Quay lại</a>
+        </div>
+    </div>
+</div>
+
+<!-- Sản phẩm liên quan -->
+<div class="mt-5">
+    <h5>Sản phẩm liên quan</h5>
+    <div class="row">
+        @foreach (var item in ViewBag.SPLienQuan)
+        {
+            <!-- Card 1 -->
+            <div class="col-md-3 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <img src="@Url.Content("~/Content/Images/"+ item.AnhBia)" class="card-img-top" alt="@item.TenSach">
+                    <div class="card-body text-center">
+                        <h6 class="card-title">@item.TenSach</h6>
+                        <p class="text-danger fw-bold">@item.GiaBan.ToString("N0") VNĐ</p>
+                        <a href="@Url.Action("Detail","Home", new {id = item.MaSach})" class="btn btn-sm btn-outline-primary">Xem chi tiết</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Bắt sự kiện click vào tất cả các ảnh có class là 'thumb'
+        $(".img-thumbnail").on("click", function () {
+
+            // 1. Lấy đường dẫn ảnh lớn từ thuộc tính data-full-src của ảnh nhỏ được click
+            var newImageSrc = $(this).data("full-src");
+
+            // 2. Cập nhật thuộc tính src của ảnh lớn (#mainImage)
+            $("#mainImage").attr("src", newImageSrc);
+
+            // (Tùy chọn) Thêm hiệu ứng/class active nếu cần
+            $(".img-thumbnail").removeClass("active-thumb");
+            $(this).addClass("active-thumb");
+        });
+    });
+</script>

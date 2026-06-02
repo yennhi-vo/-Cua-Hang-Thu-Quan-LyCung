@@ -1,0 +1,80 @@
+﻿@model IEnumerable<PetShop.TinTuc>
+@{
+    ViewBag.Title = "Quản lý Tin tức";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@* Phần tiêu đề và nút chức năng *@
+<div class="row mb-4">
+    <div class="col-md-12 text-start">
+        @* Chuyển nút về bên trái và đổi sang màu xanh lá của hệ thống *@
+        <a href="@Url.Action("ThemTinTuc", "Admin")" class="btn btn-admin-primary">
+            <i class="fas fa-plus-circle"></i> Viết bài mới
+        </a>
+    </div>
+</div>
+
+<div class="admin-table shadow-sm">
+    <table class="table align-middle mb-0">
+        @* Header bảng với màu xanh lá đặc trưng *@
+        <thead style="background-color: #8BC97A; color: #000;">
+            <tr>
+                <th class="ps-3" style="width: 100px;">Ảnh</th>
+                <th>Tiêu đề bài viết</th>
+                <th>Tác giả</th>
+                <th>Ngày đăng</th>
+                <th class="text-center" style="width: 150px;">Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="ps-3">
+                            <img src="@Url.Content("~/Content/Images/news/" + item.HinhTinTuc)"
+                                 width="70" height="50"
+                                 class="rounded shadow-sm border"
+                                 style="object-fit:cover"
+                                 alt="@item.TieuDe" />
+                        </td>
+                        <td>
+                            <span class="fw-bold text-dark">@item.TieuDe</span>
+                            <br />
+                            <small class="text-muted text-truncate d-inline-block" style="max-width: 300px;">
+                                @item.NoiDungNgan
+                            </small>
+                        </td>
+                        <td>
+                            <span class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25 px-3">
+                                <i class="fas fa-user-edit me-1"></i> @item.TacGia
+                            </span>
+                        </td>
+                        <td>
+                            <span class="text-muted"><i class="far fa-calendar-alt me-1"></i> @String.Format("{0:dd/MM/yyyy}", item.NgayDang)</span>
+                        </td>
+                        <td class="text-center">
+                            @* Thêm nút Sửa để tiện quản lý nội dung *@
+
+                            <a href="@Url.Action("XoaTinTuc", "Admin", new { id = item.MaTin })"
+                               class="btn btn-sm btn-admin-danger"
+                               onclick="return confirm('Bạn có chắc muốn xóa bài viết này?')">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="5" class="text-center py-5">
+                        <i class="fas fa-newspaper fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">Chưa có bài viết tin tức nào.</p>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

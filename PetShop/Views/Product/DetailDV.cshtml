@@ -1,0 +1,47 @@
+﻿@model PetShop.DichVu
+<div class="row">
+    <!-- Ảnh sản phẩm -->
+    <div class="col-md-4">
+        <div class="product-gallery">
+            <div class="main-image-container">
+                <img id="mainImage" src="@Url.Content("~/Content/Images/dichvu/"+ Model.Hinh)" alt="Ảnh Sản phẩm Chính" style="Mawidth: 400px; border: 1px solid #ccc;">
+            </div>
+
+        </div>
+    </div>
+    <!-- Thông tin sản phẩm -->
+    <div class="col-md-8">
+        <h3>@Model.TenDichVu</h3>
+        <h4>@Model.Gia VNĐ</h4>
+        <p>
+            @Model.MoTa
+        </p>
+        <div class="mb-3">
+            <a href="@Url.Action("AddToCart","Cart", new {id=Model.MaDichVu})" class="btn btn-success">Thêm vào giỏ</a>
+            <a href="index.html" class="btn btn-outline-secondary">Quay lại</a>
+        </div>
+    </div>
+</div>
+
+<!-- Sản phẩm liên quan -->
+<div class="mt-5">
+    <h5>Sản phẩm liên quan</h5>
+    <div class="row">
+        @foreach (var item in ViewBag.SPLienQuanDV)
+        {
+            <div class="col-md-3 mb-4">
+                <div class="card h-100 shadow-sm card-hover">
+                    <img src="@Url.Content("~/Content/Images/dichvu/" + item.Hinh)" class="card-img-top" alt="@item.TenDichVu" height="250">
+                    <div class="card-body text-center">
+                        <h6 class="card-title">@item.TenDichVu</h6>
+                        <p class="text-danger fw-bold">@String.Format("{0:N0}", item.Gia) VNĐ</p>
+                        <a href="@Url.Action("DetailDV", "Product", new { id = item.MaDichVu })" class="btn btn-sm btn-outline-primary">
+                            Xem chi tiết
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

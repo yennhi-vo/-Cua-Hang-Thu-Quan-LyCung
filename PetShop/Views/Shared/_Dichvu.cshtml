@@ -1,0 +1,11 @@
+﻿
+@model List<PetShop.LoaiDichVu>
+
+@foreach (var item in Model)
+{
+    <li>
+        <a class="dropdown-item" href="@Url.Action("DichVu", "Product", new { id = item.MaLoai })">
+            @item.TenLoai
+        </a>
+    </li>
+}

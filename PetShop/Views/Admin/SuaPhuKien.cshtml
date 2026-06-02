@@ -1,0 +1,50 @@
+﻿@model PetShop.PhuKien
+@{
+    ViewBag.Title = "Sửa Phụ Kiện";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="card p-4 shadow-sm" style="max-width: 800px; margin: auto;">
+    <h4><i class="fas fa-edit text-warning"></i> Chỉnh sửa: @Model.TenPhuKien</h4>
+    <hr />
+
+    @using (Html.BeginForm("SuaPhuKien", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.HiddenFor(m => m.MaPhuKien)
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Tên phụ kiện</label>
+            @Html.TextBoxFor(m => m.TenPhuKien, new { @class = "form-control" })
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label class="form-label fw-bold">Giá bán</label>
+                @Html.TextBoxFor(m => m.Gia, new { @class = "form-control", type = "number" })
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-bold">Giá khuyến mãi</label>
+                @Html.TextBoxFor(m => m.GiaKhuyenMai, new { @class = "form-control", type = "number" })
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Hình ảnh hiện tại</label>
+            <div class="mb-2">
+                <img src="@Url.Content("~/Content/Images/phukien/" + Model.Hinh)" width="150" class="img-thumbnail" />
+            </div>
+            <input type="file" name="uploadImage" class="form-control" />
+            <small class="text-muted">Để trống nếu không muốn thay đổi ảnh</small>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Mô tả</label>
+            @Html.TextAreaFor(m => m.MoTa, new { @class = "form-control", rows = "4" })
+        </div>
+
+        <div class="text-end">
+            <a href="@Url.Action("DanhSachPhuKien")" class="btn btn-secondary">Hủy</a>
+            <button type="submit" class="btn btn-warning">Cập nhật thay đổi</button>
+        </div>
+    }
+</div>

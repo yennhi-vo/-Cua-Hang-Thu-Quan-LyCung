@@ -1,0 +1,49 @@
+﻿@model PetShop.DatLich
+@{
+    ViewBag.Title = "Sửa lịch hẹn";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Cập nhật thông tin lịch hẹn</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.HiddenFor(model => model.MaDatLich)
+
+    <div class="form-horizontal shadow p-4 bg-white">
+        <div class="form-group">
+            <label>Họ tên khách hàng</label>
+            @Html.EditorFor(model => model.HoTenKhach, new { htmlAttributes = new { @class = "form-control" } })
+        </div>
+
+        <div class="form-group">
+            <label>Số điện thoại</label>
+            @Html.EditorFor(model => model.SDTKhach, new { htmlAttributes = new { @class = "form-control" } })
+        </div>
+
+        <div class="form-group">
+            <label>Ngày hẹn</label>
+            @Html.TextBoxFor(model => model.NgayHen, "{0:yyyy-MM-ddTHH:mm}", new { @class = "form-control", type = "datetime-local" })
+        </div>
+
+        <div class="form-group">
+            <label>Ghi chú</label>
+            @Html.TextAreaFor(model => model.GhiChu, new { @class = "form-control", rows = "3" })
+        </div>
+
+        <div class="form-group">
+            <label class="text-danger font-weight-bold">Tình trạng lịch hẹn</label>
+            <select name="TinhTrang" class="form-control">
+                <option value="Chờ xác nhận" @(Model.TinhTrang == "Chờ xác nhận" ? "selected" : "")>Chờ xác nhận</option>
+                <option value="Xác nhận" @(Model.TinhTrang == "Xác nhận" ? "selected" : "")>Xác nhận</option>
+                <option value="Đã xong" @(Model.TinhTrang == "Đã xong" ? "selected" : "")>Đã xong</option>
+                <option value="Đã hủy" @(Model.TinhTrang == "Đã hủy" ? "selected" : "")>Đã hủy</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+            <a href="@Url.Action("QuanLyLichHen")" class="btn btn-secondary">Quay lại</a>
+        </div>
+    </div>
+}

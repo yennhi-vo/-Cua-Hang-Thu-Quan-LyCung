@@ -1,0 +1,42 @@
+﻿@model PetShop.KhuyenMai
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="card p-4 shadow-sm" style="max-width: 600px; margin: auto;">
+    <h4 class="mb-3">Tạo Mã Khuyến Mãi Mới</h4>
+
+    @using (Html.BeginForm())
+    {
+        <div class="mb-3">
+            <label class="form-label">Tên chương trình (ví dụ: Chào hè)</label>
+            @Html.TextBoxFor(m => m.TenKhuyenMai, new { @class = "form-control", required = "required" })
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Mã Code (Khách nhập mã này)</label>
+            @Html.TextBoxFor(m => m.CodeKM, new { @class = "form-control", placeholder = "VD: HELLO2024", required = "required" })
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Phần trăm giảm (%)</label>
+            @Html.TextBoxFor(m => m.PhanTramGiam, new { @class = "form-control", type = "number", min = "1", max = "100" })
+        </div>
+
+        <div class="row mb-3">
+            <div class="col">
+                <label class="form-label">Ngày bắt đầu</label>
+                <input type="date" name="NgayBatDau" class="form-control" required />
+            </div>
+            <div class="col">
+                <label class="form-label">Ngày kết thúc</label>
+                <input type="date" name="NgayKetThuc" class="form-control" required />
+            </div>
+        </div>
+
+        <div class="text-end">
+            <a href="@Url.Action("DanhSachKhuyenMai")" class="btn btn-secondary">Quay lại</a>
+            <button type="submit" class="btn btn-success">Lưu mã giảm giá</button>
+        </div>
+    }
+</div>

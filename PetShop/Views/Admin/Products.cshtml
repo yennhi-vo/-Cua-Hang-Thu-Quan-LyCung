@@ -1,0 +1,138 @@
+﻿@model IEnumerable<PetShop.ThuCung>
+@{
+    ViewBag.Title = "Quản lý Thú cưng";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="row mb-4">
+    <div class="col-md-8">
+        <form method="get" class="row g-3">
+            <div class="col-md-6">
+                <input type="text" name="search" class="form-control" placeholder="Tìm kiếm thú cưng..." value="@ViewBag.Search">
+            </div>
+            <div class="col-md-4">
+                <select name="category" class="form-select">
+                    <option value="">Loại thú cưng  </option>
+                    @foreach (var cat in ViewBag.Categories as List<PetShop.LoaiThuCung>)
+                    {
+                        <option value="@cat.MaLoai" @(ViewBag.Category == cat.MaLoai ? "selected" : "")>@cat.TenLoai</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-admin-primary w-100">
+                    <i class="fas fa-search"></i> Tìm
+                </button>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-4 text-end">
+        <a href="@Url.Action("CreateProduct")" class="btn btn-admin-primary">
+            <i class="fas fa-plus"></i> Thêm Thú cưng 
+        </a>
+    </div>
+</div>
+
+<div class="admin-table">
+    <table class="table mb-0">
+        <thead>
+            <tr>
+                <th style="width: 80px;">Hình</th>
+                <th>Tên sản phẩm</th>
+                <th>Loại</th>
+                <th>Giới tính</th>
+                <th>Màu sắc</th>
+                <th>Giá</th>
+                <th>Giá khuyến mãi</th>
+                <th>Trạng thái</th>
+                <th style="width: 200px;">Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Any())
+            {
+                foreach (var item in Model)
+                {
+            <tr>
+                <td>
+                    @if (!string.IsNullOrEmpty(item.Hinh))
+                    {
+                        <img src="@Url.Content("~/Content/Images/thucung/"+ item.Hinh)" alt="@item.TenThuCung" class="img-thumbnail" style="width: 60px; height: 60px; object-fit: cover;">
+                    }
+                    else
+                    {
+                        <div class="bg-secondary text-white d-flex align-items-center justify-content-center" style="width: 60px; height: 60px; border-radius: 8px;">
+                            <i class="fas fa-image"></i>
+                        </div>
+                    }
+                </td>
+
+                <td class="fw-bold">@item.TenThuCung</td>
+                <td>@item.LoaiThuCung.TenLoai</td>
+                <td>@item.GioiTinh</td>
+                <td>@item.MauSac</td>
+                <td class="fw-bold text-success">@((item.Gia ?? 0).ToString("N0")) VNĐ</td>
+                <td class="fw-bold text-success">@((item.GiaKhuyenMai ?? 0).ToString("N0")) VNĐ</td>
+
+                <td>
+                    @if (item.TrangThai == "Còn hàng")
+                    {
+                        <span class="badge bg-success">@item.TrangThai</span>
+                    }
+                    else if (item.TrangThai == "Đã bán")
+                    {
+                        <span class="badge bg-secondary">@item.TrangThai</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-warning text-dark">@item.TrangThai</span>
+                    }
+                </td>
+                <td>
+                    <a href="@Url.Action("EditProduct", new { id = item.MaThuCung })" class="btn btn-sm btn-admin-warning">
+                        <i class="fas fa-edit"></i> Sửa
+                    </a>
+                    <button type="button" class="btn btn-sm btn-admin-danger" onclick="deleteProduct(@item.MaThuCung, '@item.TenThuCung')">
+                        <i class="fas fa-trash"></i> Xóa
+                    </button>
+                </td>
+            </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="8" class="text-center py-4">
+                        <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">Không có sản phẩm nào</p>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section scripts {
+    <script>
+        function deleteProduct(id, name) {
+            if (confirm('Bạn có chắc chắn muốn xóa sản phẩm "' + name + '"?')) {
+                $.ajax({
+                    url: '@Url.Action("DeleteProduct")',
+                    type: 'POST',
+                    data: { id: id },
+                    success: function(response) {
+                        if (response.success) {
+                            alert(response.message);
+                            location.reload();
+                        } else {
+                            alert(response.message);
+                        }
+                    },
+                    error: function() {
+                        alert('Có lỗi xảy ra. Vui lòng thử lại!');
+                    }
+                });
+            }
+        }
+    </script>
+}

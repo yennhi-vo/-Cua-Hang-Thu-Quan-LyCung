@@ -1,0 +1,106 @@
+﻿@model List<PetShop.DichVu>
+
+<div class="container mt-5">
+    <div class="row">
+        <aside class="col-md-3">
+            <div class="card border-0 shadow-sm p-3 mb-4 bg-white rounded">
+                <h5 class="fw-bold mb-3"><i class="fas fa-filter me-2"></i>Lọc dịch vụ</h5>
+                @Html.Action("_Dichvu", "Product")
+            </div>
+
+            <div class="alert alert-info small shadow-sm">
+                <i class="fas fa-info-circle me-1"></i>
+                <strong>Lưu ý:</strong> Vui lòng đặt lịch trước ít nhất 2 tiếng để chúng tôi phục vụ tốt nhất.
+            </div>
+        </aside>
+
+        <main class="col-md-9">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3 class="fw-bold text-dark">Dịch vụ Spa & Chăm sóc</h3>
+                @* Form sắp xếp giá giữ nguyên từ code cũ *@
+            </div>
+
+            <div class="row">
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var item in Model)
+                    {
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100 border-0 shadow-sm booking-card">
+                                <div class="position-relative overflow-hidden">
+                                    <img src="@Url.Content("~/Content/Images/dichvu/" + item.Hinh)"
+                                         class="card-img-top img-fluid" alt="@item.TenDichVu"
+                                         style="height: 180px; object-fit: cover;">
+                                    <div class="service-category">Dịch vụ thú cưng</div>
+                                </div>
+
+                                <div class="card-body p-3">
+                                    <h6 class="fw-bold text-uppercase mb-1">@item.TenDichVu</h6>
+
+                                    <div class="small text-muted mb-2">
+                                        <span class="me-2"><i class="far fa-clock me-1"></i>30-60 phút</span>
+                                        <span><i class="fas fa-star text-warning me-1"></i>4.9</span>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between align-items-center mt-3">
+                                        <div class="text-danger fw-bold fs-5">
+                                            @String.Format("{0:N0}", item.Gia) <small>đ</small>
+                                        </div>
+
+                                     
+                                        <a href="@Url.Action("Index", "Booking", new { id = item.MaDichVu })"
+                                           class="btn btn-primary btn-sm px-3 rounded-pill">
+                                            Đặt lịch ngay
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="col-12 text-center py-5">
+                        <p class="text-muted">Hiện chưa có dịch vụ nào trong mục này.</p>
+                    </div>
+                }
+            </div>
+        </main>
+    </div>
+</div>
+
+<style>
+    /* CSS để giao diện trông giống ứng dụng Booking */
+    .booking-card {
+        transition: all 0.3s ease;
+        border-radius: 15px !important;
+    }
+
+        .booking-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1) !important;
+        }
+
+    .service-category {
+        position: absolute;
+        bottom: 10px;
+        left: 10px;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 2px 10px;
+        border-radius: 20px;
+        font-size: 0.7rem;
+        font-weight: bold;
+        color: #ff6a00;
+        text-transform: uppercase;
+    }
+
+    .btn-primary {
+        background-color: #ff6a00;
+        border-color: #ff6a00;
+    }
+
+        .btn-primary:hover {
+            background-color: #e65f00;
+            border-color: #e65f00;
+        }
+</style>

@@ -1,0 +1,92 @@
+﻿@model IEnumerable<PetShop.PhuKien>
+@{
+    ViewBag.Title = "Quản lý Phụ kiện";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="row mb-4">
+    <div class="col-md-8">
+        <form method="get" class="row g-3">
+            <div class="col-md-6">
+                <input type="text" name="search" class="form-control" placeholder="Tìm kiếm phụ kiện..." value="@ViewBag.Search">
+            </div>
+            <div class="col-md-4">
+                <select name="category" class="form-select">
+                    <option value="">Tất cả loại phụ kiện</option>
+                    @foreach (var cat in ViewBag.Categories as List<PetShop.LoaiPhuKien>)
+                    {
+                        <option value="@cat.MaLoai" @(ViewBag.Category == cat.MaLoai ? "selected" : "")>@cat.TenLoai</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-admin-primary w-100">
+                    <i class="fas fa-search"></i> Tìm
+                </button>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-4 text-end">
+        <a href="@Url.Action("ThemPhuKien", "Admin")" class="btn btn-admin-primary">
+            <i class="fas fa-plus"></i> Thêm Phụ kiện
+        </a>
+    </div>
+</div>
+
+<div class="admin-table shadow-sm">
+    <table class="table align-middle mb-0">
+        <thead>
+            <tr>
+                <th style="width: 100px;" class="ps-3">Hình</th>
+                <th>Tên Phụ Kiện</th>
+                <th>Loại</th>
+                <th>Giá Gốc</th>
+                <th class="text-success">Giá Khuyến Mãi</th>
+                <th class="text-center" style="width: 150px;">Thao Tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Any())
+            {
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="ps-3">
+                            <img src="@Url.Content("~/Content/Images/Products/" + item.Hinh)"
+                                 class="rounded shadow-sm border"
+                                 style="width: 65px; height: 65px; object-fit: cover;"
+                                 alt="@item.TenPhuKien" />
+                        </td>
+                        <td><span class="fw-bold text-dark">@item.TenPhuKien</span></td>
+                        <td>
+                            <span class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25 px-3">
+                                @(item.LoaiPhuKien != null ? item.LoaiPhuKien.TenLoai : "N/A")
+                            </span>
+                        </td>
+                        <td class="text-muted small text-decoration-line-through">@((item.Gia ?? 0).ToString("N0"))₫</td>
+                        <td class="fw-bold text-success">@((item.GiaKhuyenMai ?? 0).ToString("N0"))₫</td>
+                        <td class="text-center">
+                            <a href="@Url.Action("SuaPhuKien", new { id = item.MaPhuKien })" class="btn btn-sm btn-admin-warning">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <a href="@Url.Action("XoaPhuKien", new { id = item.MaPhuKien })"
+                               class="btn btn-sm btn-admin-danger"
+                               onclick="return confirm('Xác nhận xóa phụ kiện này?')">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="6" class="text-center py-5">
+                        <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">Không tìm thấy phụ kiện nào phù hợp.</p>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

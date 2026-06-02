@@ -1,0 +1,20 @@
+﻿<div class="login-container mt-4" style="width: 400px; margin:auto">
+    <div class="card shadow-lg p-3">
+        <h3 class="card-title text-center fw-bold text-success mb-4">Đăng nhập</h3>
+        @using (Html.BeginForm("LoginSubmit", "User", FormMethod.Post))
+        {
+            <div class="mb-3">
+                <label for="loginEmail" class="form-label">Email</label>
+                <input type="email" name="Email" class="form-control" id="loginEmail" required>
+            </div>
+            <div class="mb-3">
+                <label for="loginPassword" class="form-label">Mật khẩu</label>
+                <input type="password" name="MatKhau" class="form-control" id="loginPassword" required>
+            </div>
+            <button type="submit" class="btn btn-success w-100 mb-3">ĐĂNG NHẬP</button>
+            <p class="text-center">
+                Chưa có tài khoản? <a href="@Url.Action("Register","User")" class="text-decoration-none fw-bold">Đăng ký ngay</a>
+            </p>
+        }       
+    </div>
+</div>

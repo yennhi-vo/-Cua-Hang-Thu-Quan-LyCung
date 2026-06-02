@@ -1,0 +1,88 @@
+﻿@model PetShop.ViewModels.ProductViewModel
+@{
+    ViewBag.Title = "Thêm Thú cưng";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="stats-card">
+            <h4 class="mb-4"><i class="fas fa-paw text-success"></i> Thêm Thú cưng  mới</h4>
+
+            @using (Html.BeginForm("CreateProduct", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        @Html.LabelFor(m => m.TenThuCung, new { @class = "form-label" })
+                        @Html.TextBoxFor(m => m.TenThuCung, new { @class = "form-control", placeholder = "Nhập tên thú cưng" })
+                        @Html.ValidationMessageFor(m => m.TenThuCung, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        @Html.LabelFor(m => m.MaLoai, "Loại", new { @class = "form-label" })
+                        @Html.DropDownListFor(m => m.MaLoai, (SelectList)ViewBag.Categories, "-- Chọn loại --", new { @class = "form-select" })
+                        @Html.ValidationMessageFor(m => m.MaLoai, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        @Html.LabelFor(m => m.GioiTinh, new { @class = "form-label" })
+                        @Html.DropDownListFor(m => m.GioiTinh, new SelectList(new[] { "Đực", "Cái" }), "-- Chọn --", new { @class = "form-select" })
+                        @Html.ValidationMessageFor(m => m.GioiTinh, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        @Html.LabelFor(m => m.NgaySinh, new { @class = "form-label" })
+                        @Html.TextBoxFor(m => m.NgaySinh, new { @class = "form-control", type = "date" })
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        @Html.LabelFor(m => m.MauSac, new { @class = "form-label" })
+                        @Html.TextBoxFor(m => m.MauSac, new { @class = "form-control", placeholder = "Ví dụ: Trắng, Vàng" })
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        @Html.LabelFor(m => m.Gia, new { @class = "form-label" })
+                        @Html.TextBoxFor(m => m.Gia, new { @class = "form-control", type = "number", placeholder = "Nhập giá" })
+                        @Html.ValidationMessageFor(m => m.Gia, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        @Html.LabelFor(m => m.TrangThai, new { @class = "form-label" })
+                        @Html.DropDownListFor(m => m.TrangThai, new SelectList(new[] { "Còn hàng", "Đã bán", "Đang đặt trước" }), new { @class = "form-select" })
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    @Html.LabelFor(m => m.MoTa, new { @class = "form-label" })
+                    @Html.TextAreaFor(m => m.MoTa, new { @class = "form-control", rows = 4, placeholder = "Mô tả chi tiết về sản phẩm" })
+                </div>
+
+                <div class="mb-3">
+                    @Html.LabelFor(m => m.ImageUpload, "Hình ảnh sản phẩm", new { @class = "form-label" })
+                    <input type="file" name="ImageUpload" class="form-control" accept="image/*" />
+                    <small class="text-muted">Chấp nhận file: JPG, PNG, GIF</small>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-admin-primary">
+                        <i class="fas fa-save"></i> Lưu sản phẩm
+                    </button>
+                    <a href="@Url.Action("Products")" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Hủy
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

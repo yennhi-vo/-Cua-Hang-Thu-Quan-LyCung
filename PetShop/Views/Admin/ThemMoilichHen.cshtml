@@ -1,0 +1,83 @@
+﻿@model PetShop.DatLich
+@{
+    ViewBag.Title = "Thêm lịch hẹn mới";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Thêm mới lịch hẹn dịch vụ</h1>
+        <a href="@Url.Action("QuanLyLichHen", "Admin")" class="btn btn-sm btn-secondary shadow-sm">
+            <i class="fas fa-arrow-left fa-sm"></i> Quay lại danh sách
+        </a>
+    </div>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Thông tin đặt lịch (Dành cho nhân viên trực máy)</h6>
+        </div>
+        <div class="card-body">
+            @using (Html.BeginForm("ThemMoilichHen", "Admin", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-horizontal">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="control-label font-weight-bold">Tên khách hàng <span class="text-danger">*</span></label>
+                                @Html.EditorFor(model => model.HoTenKhach, new { htmlAttributes = new { @class = "form-control", placeholder = "Nhập họ tên khách..." } })
+                                @Html.ValidationMessageFor(model => model.HoTenKhach, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="control-label font-weight-bold">Số điện thoại <span class="text-danger">*</span></label>
+                                @Html.EditorFor(model => model.SDTKhach, new { htmlAttributes = new { @class = "form-control", placeholder = "09xxxxxxxx" } })
+                                @Html.ValidationMessageFor(model => model.SDTKhach, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="control-label font-weight-bold">Ngày giờ hẹn <span class="text-danger">*</span></label>
+                                @* Sử dụng type="datetime-local" để hiện bảng chọn giờ *@
+                                @Html.TextBoxFor(model => model.NgayHen, new { @class = "form-control", type = "datetime-local" })
+                                @Html.ValidationMessageFor(model => model.NgayHen, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="control-label font-weight-bold">Tình trạng ban đầu</label>
+                                <select name="TinhTrang" class="form-control">
+                                    <option value="Xác nhận" selected>Xác nhận</option>
+                                    <option value="Chờ xác nhận">Chờ xác nhận</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label font-weight-bold">Ghi chú yêu cầu</label>
+                        @Html.TextAreaFor(model => model.GhiChu, new { @class = "form-control", rows = "4", placeholder = "Ví dụ: Dịch vụ tắm tỉa mèo lông dài, khách hẹn mang thú cưng đến lúc 2h chiều..." })
+                        @Html.ValidationMessageFor(model => model.GhiChu, "", new { @class = "text-danger" })
+                    </div>
+
+                    <hr />
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-success px-5 font-weight-bold">
+                            <i class="fas fa-save mr-2"></i>Lưu lịch hẹn
+                        </button>
+                        <button type="reset" class="btn btn-light border px-4 ml-2">Nhập lại</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

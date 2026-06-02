@@ -1,0 +1,155 @@
+﻿@model PetShop.ThuCung
+<div class="row">
+    <!-- Ảnh sản phẩm -->
+    <div class="col-md-4">
+        <div class="product-gallery">
+            <img id="mainImage-@Model.MaThuCung"
+                 src="@Url.Content("~/Content/Images/Products/" + Model.Hinh)"
+                 class="card-img-top" alt="@Model.TenThuCung" height="250" style="object-fit: cover;">
+
+            <div class="thumbnails mt-2 d-flex justify-content-center gap-2">
+                <img class="img-thumbnail thumb-click"
+                     src="@Url.Content("~/Content/Images/Products/" + Model.Hinh)"
+                     data-target="#mainImage-@Model.MaThuCung"
+                     data-full-src="@Url.Content("~/Content/Images/Products/" + Model.Hinh)"
+                     style="width: 50px; height: 50px; cursor: pointer; object-fit: cover;">
+
+                @if (Model.HinhAnhPhus != null)
+                {
+                    foreach (var imgPhu in Model.HinhAnhPhus)
+                    {
+                        <img class="img-thumbnail thumb-click"
+                             src="@Url.Content("~/Content/Images/hinhanhphu/" + imgPhu.HinhAnh)"
+                             data-target="#mainImage-@Model.MaThuCung"
+                             data-full-src="@Url.Content("~/Content/Images/hinhanhphu/" + imgPhu.HinhAnh)"
+                             style="width: 50px; height: 50px; cursor: pointer; object-fit: cover;">
+                    }
+                }
+            </div>
+        </div>
+    </div>
+    <!-- Thông tin sản phẩm -->
+    <div class="col-md-8">
+        <h2>@Model.TenThuCung</h2>
+        <h3 style="color: red">@Model.Gia VNĐ</h3>
+        <h5><b>Giới tính:</b>@Model.GioiTinh</h5>
+        <h5><b>Màu sắc:</b>@Model.MauSac</h5>
+        <h5><b>Ngày sinh:</b>@Model.NgaySinh</h5>
+        <p>
+            @Model.MoTa
+        </p>
+        <div class="mb-3">
+            <a href="@Url.Action("AddToCart", "Cart", new { id = Model.MaThuCung, loai = "ThuCung" })" class="btn btn-success">Thêm vào giỏ</a>
+            <a href="@Url.Action("index", "Product")" class="btn btn-outline-secondary">Quay lại</a>
+        </div>
+    </div>
+</div>
+
+
+<div class="comment-form-container mt-4 p-3 border rounded shadow-sm">
+    <h5 class="fw-bold"><i class="bi bi-pencil-square"></i> Viết bình luận của bạn</h5>
+
+    <form action="@Url.Action("GuiBinhLuan", "Product")" method="post">
+        <input type="hidden" name="id" value="@Model.MaThuCung" />
+        <input type="hidden" name="loai" value="ThuCung" />
+
+        <div class="mb-3">
+            <textarea name="noiDung" class="form-control" rows="3" placeholder="Nhập nội dung đánh giá..." required></textarea>
+        </div>
+
+        @if (Session["User"] != null)
+        {
+                 <button type="submit" class="btn btn-success">Gửi bình luận</button>
+          }
+        else
+          {
+            <div class="alert alert-info py-2">
+                        Vui lòng <a href="@Url.Action("Login", "User")">Đăng nhập</a> để bình luận.
+             </div>
+           }
+    </form>
+</div>
+
+<hr />
+<div class="mt-5 mb-5">
+    <h3 style="color:forestgreen" class="mb-4"><i class="bi bi-chat-dots"></i> Khách hàng đánh giá</h3>
+
+    <div class="row">
+        <div class="col-md-12">
+            @if (Model.BinhLuans != null && Model.BinhLuans.Any())
+            {
+                <div class="list-group">
+                    @foreach (var bl in Model.BinhLuans.OrderByDescending(x => x.NgayDang))
+                    {
+                        <div class="list-group-item list-group-item-action flex-column align-items-start mb-3 shadow-sm rounded border">
+                            <div class="d-flex w-100 justify-content-between align-items-center">
+                                <div class="d-flex align-items-center">
+                                    <div class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center fw-bold"
+                                         style="width: 40px; height: 40px; font-size: 1.2rem;">
+                                        @(string.IsNullOrEmpty(bl.KhachHang?.HoTen) ? "K" : bl.KhachHang.HoTen.Substring(0, 1).ToUpper())
+                                    </div>
+                                    <div class="ms-3">
+                                        <h6 class="mb-0 fw-bold">@(bl.KhachHang?.HoTen ?? "Khách hàng ẩn danh")</h6>
+                                        <small class="text-muted">
+                                            <i class="bi bi-clock"></i> @(bl.NgayDang.HasValue ? bl.NgayDang.Value.ToString("dd/MM/yyyy HH:mm") : "Vừa xong")
+                                        </small>
+                                    </div>
+                                </div>
+                               
+                            </div>
+                            <p class="mt-3 mb-1 text-secondary" style="font-style: italic; font-size: 1.05rem;">
+                                "@bl.NoiDung"
+                            </p>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-light border text-center">
+                    <p class="mb-0 text-muted">Chưa có bình luận nào cho sản phẩm này. Hãy là người đầu tiên đánh giá!</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<!-- Sản phẩm liên quan -->
+<div class="mt-5">
+    <h3 style="color:forestgreen">Sản phẩm liên quan</h3>
+    <hr />
+    <div class="row">
+        @foreach (var item in ViewBag.SPLienQuanTC)
+        {
+            <div class="col-md-3 mb-4">
+                <div class="card h-100 shadow-sm card-hover">
+                    <img src="@Url.Content("~/Content/Images/Products/" + item.Hinh)" class="card-img-top" alt="@item.TenThuCung" height="250">
+                    <div class="card-body text-center">
+                        <h6 class="card-title">@item.TenThuCung</h6>
+                        <p class="text-danger fw-bold">@String.Format("{0:N0}", item.Gia) VNĐ</p>
+                        <a href="@Url.Action("Detail", "Product", new { id = item.MaThuCung })" class="btn btn-sm btn-outline-primary">
+                            Xem chi tiết
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Bắt sự kiện click vào tất cả các ảnh có class là 'thumb'
+        $(".img-thumbnail").on("click", function () {
+
+            // 1. Lấy đường dẫn ảnh lớn từ thuộc tính data-full-src của ảnh nhỏ được click
+            var newImageSrc = $(this).data("full-src");
+
+            // 2. Cập nhật thuộc tính src của ảnh lớn (#mainImage)
+            $("#mainImage").attr("src", newImageSrc);
+
+            // (Tùy chọn) Thêm hiệu ứng/class active nếu cần
+            $(".img-thumbnail").removeClass("active-thumb");
+            $(this).addClass("active-thumb");
+        });
+    });
+</script>
